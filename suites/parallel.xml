@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
 <!--
-  Parallel regression run. Each test method gets its own browser (the driver is
-  held in a ThreadLocal), and the app is reset to the seed state before every
-  method, so methods are independent and safe to run concurrently.
+  Parallel regression run. Each test method gets its own browser via a ThreadLocal
+  WebDriver, so the automation layer is parallel-safe.
 
-  thread-count is deliberately modest; raise it when running against a Selenium
-  Grid with enough nodes.
+  IMPORTANT — shared-state caveat:
+  This suite is only safe to run in parallel when each worker has ISOLATED
+  application state. The demo app (ShopFlow) uses a single, global in-memory store
+  and the tests call POST /api/test/reset before every method. Run concurrently
+  against ONE app instance, one worker's reset() wipes the session/cart another
+  worker is mid-test with — producing flaky, order-dependent failures (sessions
+  bouncing back to /login, cart totals off, etc.). That is a property of the
+  system under test, not of the framework.
+
+  To run this suite for real, give each worker its own state, e.g.:
+    - a separate app instance per worker (one container each), or
+    - a unique user per worker plus a per-user (not global) reset.
+
+  For a single shared app, use the serial suites instead:
+    mvn test -Dsuite=suites/regression.xml
+  The framework itself (ThreadLocal driver) is already parallel-ready; the shared
+  store is the only blocker.
+
+  thread-count is deliberately modest; raise it when the above isolation is in place.
 -->
 <suite name="ShopFlow parallel" verbose="1" parallel="methods" thread-count="4" data-provider-thread-count="4">
 

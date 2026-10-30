@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
 <!-- Smoke suite: the critical happy paths, fast enough to gate every push. -->
 <suite name="ShopFlow smoke" verbose="1">

@@ -1,0 +1,31 @@
+services:
+  selenium-hub:
+    image: seleniarm/hub:latest
+    container_name: selenium-hub
+    ports: ["4442:4442", "4443:4443", "4444:4444"]
+
+  chromium:
+    image: seleniarm/node-chromium:latest
+    shm_size: 2gb
+    depends_on: [selenium-hub]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    ports: ["7900:7900"]
+
+  firefox:
+    image: seleniarm/node-firefox:latest
+    shm_size: 2gb
+    depends_on: [selenium-hub]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    ports: ["7901:7900"]

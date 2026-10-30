@@ -140,6 +140,23 @@ Full strategy, entry/exit criteria and the case list: **[docs/TEST_PLAN.md](docs
 
 ---
 
+## A note on parallel execution
+
+The framework is **parallel-ready** — each test gets its own browser via a
+`ThreadLocal` WebDriver. But `suites/parallel.xml` is only safe to actually run
+concurrently when **each worker has isolated application state**.
+
+The demo app keeps a single, global in-memory store, and each test resets it
+(`POST /api/test/reset`) before running. Run against **one** app instance in
+parallel, one worker's reset wipes the session/cart another worker is mid-test
+with → flaky, order-dependent failures. That's a property of the system under
+test, not the framework. To parallelise for real you'd give each worker its own
+state (an app instance per worker, or a unique user per worker with a per-user
+reset). **Against a single shared app, run the suites serially** (`smoke.xml` /
+`regression.xml`) — which is how CI runs them.
+
+---
+
 ## Test accounts (seeded)
 
 | Username | Password | Role |

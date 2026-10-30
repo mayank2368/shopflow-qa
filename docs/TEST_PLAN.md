@@ -103,6 +103,23 @@ tagged with an id (TC-xx for UI, API-xx for API), an Allure `@Story`, and a
 | Driver/browser version drift | Selenium Manager resolves drivers at runtime |
 | Timing-only failures masking bugs | Exactly one retry, logged; repeated failures still fail the build |
 
+
+### Parallel execution & shared state
+
+The framework is parallel-ready (one `ThreadLocal` WebDriver per test), but the
+system under test keeps a **single, global in-memory store** and every test calls
+`POST /api/test/reset` before running. Running `suites/parallel.xml` against one
+shared app instance therefore causes a data race — one worker's reset clears the
+session/cart another worker is mid-test with, giving flaky, order-dependent
+failures. This is a property of the SUT, not the test code.
+
+**Decision:** run serially against a single app (`smoke.xml` / `regression.xml`),
+which is how CI runs. True parallel execution would require isolated state per
+worker — a separate app instance per worker, or a unique user per worker with a
+per-user (rather than global) reset. `parallel.xml` is kept as the template for
+that, with the caveat documented in the file.
+
+
 ## 8. Reporting & triage
 
 Allure is generated in CI and published to GitHub Pages. Failures attach a

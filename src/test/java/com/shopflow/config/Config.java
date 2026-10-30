@@ -11,64 +11,69 @@ import java.util.Properties;
  */
 public final class Config {
 
-    private static final Properties PROPS = load();
+	private static final Properties PROPS = load();
 
-    private Config() {
-    }
+	private Config() {
+	}
 
-    private static Properties load() {
-        Properties props = new Properties();
-        try (InputStream in = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (in != null) {
-                props.load(in);
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not read config.properties", e);
-        }
-        return props;
-    }
+	private static Properties load() {
+		Properties props = new Properties();
+		try (InputStream in = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
+			if (in != null) {
+				props.load(in);
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException("Could not read config.properties", e);
+		}
+		return props;
+	}
 
-    public static String get(String key) {
-        String sys = System.getProperty(key);
-        if (isSet(sys)) {
-            return sys.trim();
-        }
-        String env = System.getenv(key.replace('.', '_').toUpperCase());
-        if (isSet(env)) {
-            return env.trim();
-        }
-        String prop = PROPS.getProperty(key);
-        return prop == null ? null : prop.trim();
-    }
+	public static String get(String key) {
+		String sys = System.getProperty(key);
+		if (isSet(sys)) {
+			return sys.trim();
+		}
+		String env = System.getenv(key.replace('.', '_').toUpperCase());
+		if (isSet(env)) {
+			return env.trim();
+		}
+		String prop = PROPS.getProperty(key);
+		return prop == null ? null : prop.trim();
+	}
 
-    public static String get(String key, String fallback) {
-        String value = get(key);
-        return value == null || value.isEmpty() ? fallback : value;
-    }
+	public static String get(String key, String fallback) {
+		String value = get(key);
+		return value == null || value.isEmpty() ? fallback : value;
+	}
 
-    private static boolean isSet(String v) {
-        return v != null && !v.isBlank() && !v.startsWith("${");
-    }
+	private static boolean isSet(String v) {
+		return v != null && !v.isBlank() && !v.startsWith("${");
+	}
 
-    public static String baseUrl() {
-        String url = get("baseUrl", "http://localhost:5000");
-        return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
-    }
+	public static String baseUrl() {
+		String url = get("baseUrl", "http://localhost:5000");
+		return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+	}
 
-    public static Browser browser() {
-        return Browser.from(get("browser", "chrome"));
-    }
+	public static String apiBaseUrl() {
+		String url = get("apiBaseUrl", baseUrl()); // falls back to baseUrl
+		return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+	}
 
-    /** Headless is forced on when running in CI (GitHub Actions sets CI=true). */
-    public static boolean headless() {
-        return "true".equalsIgnoreCase(System.getenv("CI")) || Boolean.parseBoolean(get("headless", "true"));
-    }
+	public static Browser browser() {
+		return Browser.from(get("browser", "chrome"));
+	}
 
-    public static String remoteUrl() {
-        return get("remoteUrl", "");
-    }
+	/** Headless is forced on when running in CI (GitHub Actions sets CI=true). */
+	public static boolean headless() {
+		return "true".equalsIgnoreCase(System.getenv("CI")) || Boolean.parseBoolean(get("headless", "true"));
+	}
 
-    public static Duration timeout() {
-        return Duration.ofSeconds(Long.parseLong(get("timeoutSeconds", "10")));
-    }
+	public static String remoteUrl() {
+		return get("remoteUrl", "");
+	}
+
+	public static Duration timeout() {
+		return Duration.ofSeconds(Long.parseLong(get("timeoutSeconds", "10")));
+	}
 }
