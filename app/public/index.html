@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ShopFlow</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-test="header" hidden>
+      <a href="#/products" class="brand" data-test="brand">ShopFlow</a>
+      <nav>
+        <a href="#/products" data-test="nav-products">Products</a>
+        <a href="#/admin" data-test="nav-admin" hidden>Admin</a>
+      </nav>
+      <div class="header-right">
+        <a href="#/cart" class="cart-link" data-test="cart-link">
+          Cart <span class="badge" data-test="cart-badge" hidden>0</span>
+        </a>
+        <a href="#/account" data-test="account-menu"></a>
+        <button type="button" data-test="logout">Logout</button>
+      </div>
+    </header>
+
+    <main id="view" class="view"></main>
+    <div id="toast" class="toast" role="status" data-test="toast" hidden></div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

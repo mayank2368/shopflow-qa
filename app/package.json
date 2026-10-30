@@ -1,0 +1,11 @@
+{
+  "name": "shopflow-app",
+  "version": "1.0.0",
+  "description": "ShopFlow — the demo full-stack app that the Java/Selenium functional test suite runs against.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-10-30T08:47:32 CET" name="Default suite" finished-at="2026-10-30T08:48:06 CET" duration-ms="34482">
+    <groups>
+      <group name="regression">
+        <method signature="LoginTests.standardUserCanLogIn()[pri:0, instance:com.shopflow.tests.LoginTests@49f3ff41]" name="standardUserCanLogIn" class="com.shopflow.tests.LoginTests"/>
+      </group> <!-- regression -->
+      <group name="smoke">
+        <method signature="LoginTests.standardUserCanLogIn()[pri:0, instance:com.shopflow.tests.LoginTests@49f3ff41]" name="standardUserCanLogIn" class="com.shopflow.tests.LoginTests"/>
+      </group> <!-- smoke -->
+    </groups>
+    <test started-at="2026-10-30T08:47:32 CET" name="Default test" finished-at="2026-10-30T08:48:06 CET" duration-ms="34482">
+      <class name="com.shopflow.tests.LoginTests">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:com.shopflow.tests.LoginTests@49f3ff41]" started-at="2026-10-30T08:47:32 CET" name="setUp" finished-at="2026-10-30T08:47:33 CET" duration-ms="1290" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="standardUserCanLogIn()[pri:0, instance:com.shopflow.tests.LoginTests@49f3ff41]" started-at="2026-10-30T08:47:33 CET" name="standardUserCanLogIn" description="TC-01: a standard user can log in" finished-at="2026-10-30T08:47:34 CET" duration-ms="387" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- standardUserCanLogIn -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.shopflow.tests.LoginTests@49f3ff41]" started-at="2026-10-30T08:47:34 CET" name="tearDown" finished-at="2026-10-30T08:48:06 CET" duration-ms="32730" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.shopflow.tests.LoginTests -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

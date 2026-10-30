@@ -1,0 +1,49 @@
+# Selenium Grid for running the suite against real browsers in containers.
+#
+#   docker compose -f docker/docker-compose.grid.yml up -d
+#   mvn test -Dsuite=suites/parallel.xml -DremoteUrl=http://localhost:4444/wd/hub -Dbrowser=chrome
+#   docker compose -f docker/docker-compose.grid.yml down
+#
+# The Hub exposes the WebDriver endpoint on 4444 and a live view on 7900
+# (noVNC, password "secret"). Scale a node with --scale chrome=3.
+services:
+  selenium-hub:
+    image: selenium/hub:4.27.0
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:4.27.0
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    # Lets the browser in the container reach the app running on the host.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    ports:
+      - "7900:7900"
+
+  firefox:
+    image: selenium/node-firefox:4.27.0
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    ports:
+      - "7901:7900"

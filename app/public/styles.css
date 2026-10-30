@@ -1,0 +1,44 @@
+:root {
+  --bg: #f4f6f9; --surface: #fff; --ink: #18212e; --muted: #5a6677; --line: #dce1e8;
+  --brand: #1f5f8b; --brand-ink: #fff; --error: #b42318; --success: #067647;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); }
+a { color: var(--brand); }
+.site-header { display: flex; align-items: center; gap: 20px; padding: 12px 24px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; }
+.brand { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--brand); }
+.site-header nav { display: flex; gap: 14px; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.badge { background: var(--brand); color: #fff; border-radius: 999px; padding: 0 7px; font-size: .75rem; font-weight: 700; }
+.view { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 14px; }
+.login { max-width: 360px; margin: 48px auto; display: flex; flex-direction: column; gap: 8px; }
+h1 { font-size: 1.6rem; margin: 0 0 16px; }
+label { font-weight: 600; font-size: .9rem; }
+input, select, button { font: inherit; }
+input, select { width: 100%; padding: 9px 11px; border: 1.5px solid var(--muted); border-radius: 8px; background: var(--surface); color: var(--ink); min-height: 42px; }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.toolbar input, .toolbar select { width: auto; flex: 1 1 160px; }
+button { cursor: pointer; background: var(--brand); color: var(--brand-ink); border: none; border-radius: 8px; padding: 9px 16px; min-height: 42px; font-weight: 600; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.product { display: flex; flex-direction: column; gap: 6px; }
+.product-name { font-weight: 700; text-decoration: none; }
+.price { font-weight: 800; }
+.muted { color: var(--muted); font-size: .9rem; }
+.pagination { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.pagination button { background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); }
+.cart-item { display: grid; grid-template-columns: 1fr auto 90px auto; gap: 12px; align-items: center; }
+.cart-item input { width: 80px; }
+.totals { font-weight: 600; display: flex; flex-direction: column; gap: 4px; margin: 14px 0; }
+.grand { font-size: 1.2rem; font-weight: 800; }
+.error { color: var(--error); font-weight: 600; }
+.success { color: var(--success); font-weight: 600; }
+.hint { color: var(--muted); font-size: .85rem; }
+.back { display: inline-block; margin-bottom: 10px; }
+.admin-table { width: 100%; border-collapse: collapse; background: var(--surface); }
+.admin-table th, .admin-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.admin-table button { background: var(--surface); color: var(--error); border: 1.5px solid var(--line); padding: 5px 10px; min-height: 34px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 8px; }
+form.card { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }

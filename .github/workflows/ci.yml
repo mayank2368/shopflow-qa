@@ -1,0 +1,105 @@
+name: E2E tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Allow the Allure job to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Start the ShopFlow app
+        working-directory: app
+        run: |
+          node src/server.js &
+          echo "APP_PID=$!" >> "$GITHUB_ENV"
+
+      - name: Wait for the app to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:5000/api/health >/dev/null; then
+              echo "app is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "app did not start in time"; exit 1
+
+      # setup-java provides Chrome/Firefox on the runner image; Selenium Manager
+      # resolves the matching driver automatically at runtime.
+      - name: Run regression suite (${{ matrix.browser }})
+        run: mvn -B test -Dsuite=suites/regression.xml -Dbrowser=${{ matrix.browser }} -Dheadless=true
+
+      - name: Stop the app
+        if: always()
+        run: kill "$APP_PID" || true
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.browser }}
+          path: target/allure-results
+
+  report:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          path: all-results
+          merge-multiple: true
+
+      - name: Generate Allure report
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          allure_results: all-results
+          allure_report: allure-report
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+  deploy-report:
+    needs: report
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
